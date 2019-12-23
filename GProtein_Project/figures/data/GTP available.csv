@@ -1,0 +1,46 @@
+AIG-1 (1H65),G1,GXXXXGK,AIG-1 (1H65),G3,DXXG,AIG-1 (1H65),G4,THAQ,AIG-1 (1H65),G5,ENS
+Arf (1HUR),G1,GXXXXGK,Arf (1HUR),G3,DXXG,Arf (1HUR),G4,NKXD,Arf (1HUR),G5,S/CAX
+Dynamin (1DYN),G1,GXXXXGK,Dynamin (1DYN),G3,DXXG,Dynamin (1DYN),G4,TKXD,Dynamin (1DYN),G5,SQX
+Era (1EGA),G1,GXXXXGK,Era (1EGA),G3,DXXG,Era (1EGA),G4,NKXD,Era (1EGA),G5,SAX
+EngA (3J8G),G1,GXXXXGK,EngA (3J8G),G3,DXXG,EngA (3J8G),G4,NKXD,EngA (3J8G),G5,
+EngB (1SUL),G1,GXXXXGK,EngB (1SUL),G3,DXXG,EngB (1SUL),G4,TKXD,EngB (1SUL),G5,SSX
+FeoB (3HYR),G1,GXXXXGK,FeoB (3HYR),G3,DXXG,FeoB (3HYR),G4,NKXD,FeoB (3HYR),G5,STX
+GB1 or RHD3 (1DG3),G1,GXXXXGK,GB1 or RHD3 (1DG3),G3,DXXG,GB1 or RHD3 (1DG3),G4,TKXD,GB1 or RHD3 (1DG3),G5,
+Hflx (2QTF),G1,GXXXXGK,Hflx (2QTF),G3,DXXG,Hflx (2QTF),G4,NKXD,Hflx (2QTF),G5,SAX
+IRG (1TPZ),G1,GXXXXGK,IRG (1TPZ),G3,DXXG,IRG (1TPZ),G4,T/NKXD,IRG (1TPZ),G5,
+Obg (1LNZ),G1,GXXXXGK,Obg (1LNZ),G3,DXXG,Obg (1LNZ),G4,NKXD,Obg (1LNZ),G5,SAX
+Rab (1N6H),G1,GXXXXGK,Rab (1N6H),G3,DXXG,Rab (1N6H),G4,NKXD,Rab (1N6H),G5,SAX
+Rac (1Z2C),G1,GXXXXGK,Rac (1Z2C),G3,DXXG,Rac (1Z2C),G4,N/TKXD,Rac (1Z2C),G5,SAX
+Ran (1I2M),G1,GXXXXGK,Ran (1I2M),G3,DXXG,Ran (1I2M),G4,NKXD,Ran (1I2M),G5,SAX
+Ras (2N9C),G1,GXXXXGK,Ras (2N9C),G3,DXXG,Ras (2N9C),G4,NKXD,Ras (2N9C),G5,SAX
+Roc (2ZEJ),G1,GXXXXGK,Roc (2ZEJ),G3,DXXG,Roc (2ZEJ),G4,TKXD,Roc (2ZEJ),G5,NAX
+Septin (2QAG),G1,GXXXXGK,Septin (2QAG),G3,DXXG,Septin (2QAG),G4,AKXD,Septin (2QAG),G5,
+SRP (1MFQ),G1,GXXXXGK,SRP (1MFQ),G3,DXXG,SRP (1MFQ),G4,TKXD,SRP (1MFQ),G5,GXG
+Translational (1R5B),G1,GXXXXGK,Translational (1R5B),G3,DXXG,Translational (1R5B),G4,NKXD,Translational (1R5B),G5,S/TAX or SGX
+tRME (1RFL),G1,GXXXXGK,tRME (1RFL),G3,DXXG,tRME (1RFL),G4,NKXD,tRME (1RFL),G5,SAX
+,,,,,,,,,,,
+G1 Motif,Percentage G1,,,,,,,,,,
+GXXXXGK,100,,,,,,,,,,
+,,,,,,,,,,,
+G3 Motif,Percentage G3,,,,,,,,,,
+DXXG,100,,,,,,,,,,
+,,,,,,,,,,,
+G4 Motif,Percentage G4,,,,,,,,,,
+THAQ,5,,,,,,,,,,
+NKXD,55,,,,,,,,,,
+TKXD,25,,,,,,,,,,
+T/NKXD,5,,,,,,,,,,
+N/TKXD,5,,,,,,,,,,
+AKXD,5,,,,,,,,,,
+,,,,,,,,,,,
+G5 Motif,Percentage G5,,,,,,,,,,
+ENS,5,,,,,,,,,,
+S/CAX,5,,,,,,,,,,
+SQX,5,,,,,,,,,,
+SAX,40,,,,,,,,,,
+unknown,20,,,,,,,,,,
+SSX,5,,,,,,,,,,
+STX,5,,,,,,,,,,
+NAX,5,,,,,,,,,,
+GXG,5,,,,,,,,,,
+S/TAXorSGX,5,,,,,,,,,,

@@ -1,0 +1,9 @@
+inst/images/.*$
+^\.travis\.yml$
+ggseqlogo.Rcheck/.*$
+ggseqlogo_.*\.tar\.gz$
+dist/.*$
+docs/.*$
+inst/fonts/.*$
+README.md
+shiny/.*$

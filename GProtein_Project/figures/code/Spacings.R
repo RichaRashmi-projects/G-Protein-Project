@@ -1,0 +1,449 @@
+library(readr)
+library(ggplot2)
+library(reshape2)
+library(plyr)
+library(ggpubr)
+
+number_ticks <- function(n) {function(limits) pretty(limits, n)}
+
+##########################################################################################
+
+inpath_before_ras = "H:/GProtein_Project/Ras/Ras_output_wo_bias.csv"
+inpath_after_ras = "H:/GProtein_Project/Ras/Ras_output_new.csv"
+outpath_G1G3_ras = "H:/GProtein_Project/figures/images/Spacing/G1_G3/Ras.pdf"
+outpath_G3G4_ras = "H:/GProtein_Project/figures/images/Spacing/G3_G4/Ras.pdf"  
+outpath_G4G5_ras = "H:/GProtein_Project/figures/images/Spacing/G4_G5/Ras.pdf"
+  
+temp_before <- read_csv(inpath_before_ras, col_types = cols(`G1-box` = col_skip(),
+                                                 `G3-box` = col_skip(), `G4-box` = col_skip(),
+                                                 `G5-box` = col_skip()))
+
+temp_after <- read_csv(inpath_after_ras,col_types = cols(`G1-box` = col_skip(),
+                                        `G3-box` = col_skip(), `G4-box` = col_skip(),
+                                        `G5-box` = col_skip()))
+
+
+#########################################################################################
+
+temp_before_spacing_G1G3 = data.frame(temp_before[,1],temp_before[,3] - temp_before[,2]) 
+colnames(temp_before_spacing_G1G3) = c("ProteinID", "G1G3_Spacing_before")
+temp_after_spacing_G1G3 = data.frame(temp_after[,1],temp_after[,3] - temp_after[,2])
+colnames(temp_after_spacing_G1G3) = c("ProteinID", "G1G3_Spacing_after")
+
+temp_before_spacing_G1G3.m =  melt(temp_before_spacing_G1G3, id = c("ProteinID"))
+temp_after_spacing_G1G3.m =  melt(temp_after_spacing_G1G3, id = c("ProteinID"))
+
+G1G3 = rbind(temp_before_spacing_G1G3.m, temp_after_spacing_G1G3.m)
+
+mu <- ddply(G1G3, "variable", summarise, grp.mean=mean(value))
+
+p1_G1G3_ras = ggplot(temp_before_spacing_G1G3.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#2e47a3")+
+  geom_density(alpha=.2, fill="#2e47a3")+
+  labs(title="G1 - G3 Spacing Before histogram plot",x="Spacing", y = "Density")
+
+p2_G1G3_ras = ggplot(temp_after_spacing_G1G3.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#E69F00")+
+  geom_density(alpha=.2, fill="#E69F00")+
+  labs(title="G1 - G3 Spacing After histogram plot",x="Spacing", y = "Density")
+
+p3_G1G3_ras = ggplot(G1G3, aes(x=value, color=variable, fill=variable))  +  
+  geom_bar(aes(y = (..count..)/sum(..count..)), position="identity", alpha=0.5) + 
+  scale_y_continuous(labels = scales::percent, limits = c(0, 0.6), breaks=number_ticks(10))+
+  geom_vline(data=mu, aes(xintercept=grp.mean, color=variable),
+             linetype="dashed")+
+  scale_color_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  scale_fill_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  labs(title="G1 - G3 Spacing histogram plot",x="Spacing", y = "Percentage")+
+  theme(legend.position="bottom")
+
+suppressMessages( require(cowplot) )
+p_G1G3_ras = plot_grid(p1_G1G3_ras,p2_G1G3_ras,p3_G1G3_ras,ncol = 1)
+
+ggsave(outpath_G1G3_ras, plot = p_G1G3_ras, 
+       scale = 1,width=8.5, height=11, units = c("in", "cm", "mm"), dpi = 500)
+
+###########################################################################################
+
+temp_before_spacing_G3G4 = data.frame(temp_before[,1],temp_before[,4] - temp_before[,3]) 
+colnames(temp_before_spacing_G3G4) = c("ProteinID", "G3G4_Spacing_before")
+temp_after_spacing_G3G4 = data.frame(temp_after[,1],temp_after[,4] - temp_after[,3])
+colnames(temp_after_spacing_G3G4) = c("ProteinID", "G3G4_Spacing_after")
+
+temp_before_spacing_G3G4.m =  melt(temp_before_spacing_G3G4, id = c("ProteinID"))
+temp_after_spacing_G3G4.m =  melt(temp_after_spacing_G3G4, id = c("ProteinID"))
+
+G3G4 = rbind(temp_before_spacing_G3G4.m, temp_after_spacing_G3G4.m)
+
+mu <- ddply(G3G4, "variable", summarise, grp.mean=mean(value))
+
+p1_G3G4_ras = ggplot(temp_before_spacing_G3G4.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#2e47a3")+
+  geom_density(alpha=.2, fill="#2e47a3")+
+  labs(title="G3 - G4 Spacing Before histogram plot",x="Spacing", y = "Density")
+
+p2_G3G4_ras = ggplot(temp_after_spacing_G3G4.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#E69F00")+
+  geom_density(alpha=.2, fill="#E69F00")+
+  labs(title="G3 - G4 Spacing After histogram plot",x="Spacing", y = "Density")
+
+p3_G3G4_ras = ggplot(G3G4, aes(x=value, color=variable, fill=variable))  +  
+  geom_bar(aes(y = (..count..)/sum(..count..)), position="identity", alpha=0.5) + 
+  scale_y_continuous(labels = scales::percent, limits = c(0, 0.6),breaks=number_ticks(10))+
+  geom_vline(data=mu, aes(xintercept=grp.mean, color=variable),
+             linetype="dashed")+
+  scale_color_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  scale_fill_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  labs(title="G3 - G4 Spacing histogram plot",x="Spacing", y = "Percentage")+
+  theme(legend.position="bottom")
+
+suppressMessages( require(cowplot) )
+p_G3G4_ras = plot_grid(p1_G3G4_ras,p2_G3G4_ras,p3_G3G4_ras,ncol = 1)
+
+ggsave(outpath_G3G4_ras, plot = p_G3G4_ras, 
+       scale = 1,width=8.5, height=11, units = c("in", "cm", "mm"), dpi = 500)
+
+#########################################################################################
+
+temp_before_spacing_G4G5 = data.frame(temp_before[,1],temp_before[,5] - temp_before[,4]) 
+colnames(temp_before_spacing_G4G5) = c("ProteinID", "G4G5_Spacing_before")
+temp_after_spacing_G4G5 = data.frame(temp_after[,1],temp_after[,5] - temp_after[,4])
+colnames(temp_after_spacing_G4G5) = c("ProteinID", "G4G5_Spacing_after")
+
+temp_before_spacing_G4G5.m =  melt(temp_before_spacing_G4G5, id = c("ProteinID"))
+temp_after_spacing_G4G5.m =  melt(temp_after_spacing_G4G5, id = c("ProteinID"))
+
+G4G5 = rbind(temp_before_spacing_G4G5.m, temp_after_spacing_G4G5.m)
+
+mu <- ddply(G4G5, "variable", summarise, grp.mean=mean(value))
+
+p1_G4G5_ras = ggplot(temp_before_spacing_G4G5.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#2e47a3")+
+  geom_density(alpha=.2, fill="#2e47a3")+
+  labs(title="G4 - G5 Spacing Before histogram plot",x="Spacing", y = "Density")
+
+p2_G4G5_ras = ggplot(temp_after_spacing_G4G5.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#E69F00")+
+  geom_density(alpha=.2, fill="#E69F00")+
+  labs(title="G4 - G5 Spacing After histogram plot",x="Spacing", y = "Density")
+
+p3_G4G5_ras = ggplot(G4G5, aes(x=value, color=variable, fill=variable)) +  
+  geom_bar(aes(y = (..count..)/sum(..count..)), position="identity", alpha=0.5) + 
+  scale_y_continuous(labels = scales::percent,breaks=number_ticks(10))+
+  geom_vline(data=mu, aes(xintercept=grp.mean, color=variable),
+             linetype="dashed")+
+  scale_color_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  scale_fill_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  labs(title="G4 - G5 Spacing histogram plot",x="Spacing", y = "Percentage")+
+  theme(legend.position="bottom")
+
+suppressMessages( require(cowplot) )
+p_G4G5_ras = plot_grid(p1_G4G5_ras,p2_G4G5_ras,p3_G4G5_ras,ncol = 1)
+
+ggsave(outpath_G4G5_ras, plot = p_G4G5_ras, 
+       scale = 1,width=8.5, height=11, units = c("in", "cm", "mm"), dpi = 500)
+
+##########################################################################################
+
+inpath_before_Era = "H:/GProtein_Project/Era/Era_output_wo_bias.csv"
+inpath_after_Era = "H:/GProtein_Project/Era/Era_output_new.csv"
+outpath_G1G3_Era = "H:/GProtein_Project/figures/images/Spacing/G1_G3/Era.pdf"
+outpath_G3G4_Era = "H:/GProtein_Project/figures/images/Spacing/G3_G4/Era.pdf"  
+outpath_G4G5_Era = "H:/GProtein_Project/figures/images/Spacing/G4_G5/Era.pdf"
+
+temp_before <- read_csv(inpath_before_Era, col_types = cols(`G1-box` = col_skip(),
+                                                        `G3-box` = col_skip(), `G4-box` = col_skip(),
+                                                        `G5-box` = col_skip()))
+
+temp_after <- read_csv(inpath_after_Era,col_types = cols(`G1-box` = col_skip(),
+                                                     `G3-box` = col_skip(), `G4-box` = col_skip(),
+                                                     `G5-box` = col_skip()))
+
+
+#########################################################################################
+
+temp_before_spacing_G1G3 = data.frame(temp_before[,1],temp_before[,3] - temp_before[,2]) 
+colnames(temp_before_spacing_G1G3) = c("ProteinID", "G1G3_Spacing_before")
+temp_after_spacing_G1G3 = data.frame(temp_after[,1],temp_after[,3] - temp_after[,2])
+colnames(temp_after_spacing_G1G3) = c("ProteinID", "G1G3_Spacing_after")
+
+temp_before_spacing_G1G3.m =  melt(temp_before_spacing_G1G3, id = c("ProteinID"))
+temp_after_spacing_G1G3.m =  melt(temp_after_spacing_G1G3, id = c("ProteinID"))
+
+G1G3 = rbind(temp_before_spacing_G1G3.m, temp_after_spacing_G1G3.m)
+
+mu <- ddply(G1G3, "variable", summarise, grp.mean=mean(value))
+
+p1_G1G3_Era = ggplot(temp_before_spacing_G1G3.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#2e47a3")+
+  geom_density(alpha=.2, fill="#2e47a3")+
+  labs(title="G1 - G3 Spacing Before histogram plot",x="Spacing", y = "Density")
+
+p2_G1G3_Era = ggplot(temp_after_spacing_G1G3.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#E69F00")+
+  geom_density(alpha=.2, fill="#E69F00")+
+  labs(title="G1 - G3 Spacing After histogram plot",x="Spacing", y = "Density")
+
+p3_G1G3_Era = ggplot(G1G3, aes(x=value, color=variable, fill=variable)) +  
+  geom_bar(aes(y = (..count..)/sum(..count..)), position="identity", alpha=0.5) + 
+  scale_y_continuous(labels = scales::percent, limits = c(0, 0.45),breaks=number_ticks(10))+
+  geom_vline(data=mu, aes(xintercept=grp.mean, color=variable),
+             linetype="dashed")+
+  scale_color_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  scale_fill_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  labs(title="G1 - G3 Spacing histogram plot",x="Spacing", y = "Percentage")+
+  theme(legend.position="bottom")
+
+suppressMessages( require(cowplot) )
+p_G1G3_Era = plot_grid(p1_G1G3_Era,p2_G1G3_Era,p3_G1G3_Era,ncol = 1)
+
+ggsave(outpath_G1G3_Era, plot = p_G1G3_Era, 
+       scale = 1,width=8.5, height=11, units = c("in", "cm", "mm"), dpi = 500)
+
+###########################################################################################
+
+temp_before_spacing_G3G4 = data.frame(temp_before[,1],temp_before[,4] - temp_before[,3]) 
+colnames(temp_before_spacing_G3G4) = c("ProteinID", "G3G4_Spacing_before")
+temp_after_spacing_G3G4 = data.frame(temp_after[,1],temp_after[,4] - temp_after[,3])
+colnames(temp_after_spacing_G3G4) = c("ProteinID", "G3G4_Spacing_after")
+
+temp_before_spacing_G3G4.m =  melt(temp_before_spacing_G3G4, id = c("ProteinID"))
+temp_after_spacing_G3G4.m =  melt(temp_after_spacing_G3G4, id = c("ProteinID"))
+
+G3G4 = rbind(temp_before_spacing_G3G4.m, temp_after_spacing_G3G4.m)
+
+mu <- ddply(G3G4, "variable", summarise, grp.mean=mean(value))
+
+p1_G3G4_Era = ggplot(temp_before_spacing_G3G4.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#2e47a3")+
+  geom_density(alpha=.2, fill="#2e47a3")+
+  labs(title="G3 - G4 Spacing Before histogram plot",x="Spacing", y = "Density")
+
+p2_G3G4_Era = ggplot(temp_after_spacing_G3G4.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#E69F00")+
+  geom_density(alpha=.2, fill="#E69F00")+
+  labs(title="G3 - G4 Spacing After histogram plot",x="Spacing", y = "Density")
+
+p3_G3G4_Era = ggplot(G3G4, aes(x=value, color=variable, fill=variable))  +  
+  geom_bar(aes(y = (..count..)/sum(..count..)), position="identity", alpha=0.5) + 
+  scale_y_continuous(labels = scales::percent, limits = c(0, 0.45),breaks=number_ticks(10))+
+  geom_vline(data=mu, aes(xintercept=grp.mean, color=variable),
+             linetype="dashed")+
+  scale_color_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  scale_fill_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  labs(title="G3 - G4 Spacing histogram",x="Spacing", y = "Percentage")+
+  theme(legend.position="bottom")
+
+suppressMessages( require(cowplot) )
+p_G3G4_Era = plot_grid(p1_G3G4_Era,p2_G3G4_Era,p3_G3G4_Era,ncol = 1)
+
+ggsave(outpath_G3G4_Era, plot = p_G3G4_Era, 
+       scale = 1,width=8.5, height=11, units = c("in", "cm", "mm"), dpi = 500)
+
+#########################################################################################
+
+temp_before_spacing_G4G5 = data.frame(temp_before[,1],temp_before[,5] - temp_before[,4]) 
+colnames(temp_before_spacing_G4G5) = c("ProteinID", "G4G5_Spacing_before")
+temp_after_spacing_G4G5 = data.frame(temp_after[,1],temp_after[,5] - temp_after[,4])
+colnames(temp_after_spacing_G4G5) = c("ProteinID", "G4G5_Spacing_after")
+
+temp_before_spacing_G4G5.m =  melt(temp_before_spacing_G4G5, id = c("ProteinID"))
+temp_after_spacing_G4G5.m =  melt(temp_after_spacing_G4G5, id = c("ProteinID"))
+
+G4G5 = rbind(temp_before_spacing_G4G5.m, temp_after_spacing_G4G5.m)
+
+mu <- ddply(G4G5, "variable", summarise, grp.mean=mean(value))
+
+p1_G4G5_Era = ggplot(temp_before_spacing_G4G5.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#2e47a3")+
+  geom_density(alpha=.2, fill="#2e47a3")+
+  labs(title="G4 - G5 Spacing Before histogram plot",x="Spacing", y = "Density")
+
+p2_G4G5_Era = ggplot(temp_after_spacing_G4G5.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#E69F00")+
+  geom_density(alpha=.2, fill="#E69F00")+
+  labs(title="G4 - G5 Spacing After histogram plot",x="Spacing", y = "Density")
+
+p3_G4G5_Era = ggplot(G4G5, aes(x=value, color=variable, fill=variable))+  
+  geom_bar(aes(y = (..count..)/sum(..count..)), position="identity", alpha=0.5) + 
+  scale_y_continuous(labels = scales::percent,breaks=number_ticks(10))+
+  geom_vline(data=mu, aes(xintercept=grp.mean, color=variable),
+             linetype="dashed")+
+  scale_color_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  scale_fill_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  labs(title="G4 - G5 Spacing histogram plot",x="Spacing", y = "Percentage")+
+  theme(legend.position="bottom")
+
+
+suppressMessages( require(cowplot) )
+p_G4G5_Era = plot_grid(p1_G4G5_Era,p2_G4G5_Era,p3_G4G5_Era,ncol = 1)
+
+ggsave(outpath_G4G5_Era, plot = p_G4G5_Era, 
+       scale = 1,width=8.5, height=11, units = c("in", "cm", "mm"), dpi = 500)
+##########################################################################################
+
+inpath_before_Translational = "H:/GProtein_Project/Translational/Translational_output_wo_bias.csv"
+inpath_after_Translational = "H:/GProtein_Project/Translational/Translational_output_new.csv"
+outpath_G1G3_Translational = "H:/GProtein_Project/figures/images/Spacing/G1_G3/Translational.pdf"
+outpath_G3G4_Translational = "H:/GProtein_Project/figures/images/Spacing/G3_G4/Translational.pdf"  
+outpath_G4G5_Translational = "H:/GProtein_Project/figures/images/Spacing/G4_G5/Translational.pdf"
+
+temp_before <- read_csv(inpath_before_Translational, col_types = cols(`G1-box` = col_skip(),
+                                                        `G3-box` = col_skip(), `G4-box` = col_skip(),
+                                                        `G5-box` = col_skip()))
+
+temp_after <- read_csv(inpath_after_Translational,col_types = cols(`G1-box` = col_skip(),
+                                                     `G3-box` = col_skip(), `G4-box` = col_skip(),
+                                                     `G5-box` = col_skip()))
+
+
+#########################################################################################
+
+temp_before_spacing_G1G3 = data.frame(temp_before[,1],temp_before[,3] - temp_before[,2]) 
+colnames(temp_before_spacing_G1G3) = c("ProteinID", "G1G3_Spacing_before")
+temp_after_spacing_G1G3 = data.frame(temp_after[,1],temp_after[,3] - temp_after[,2])
+colnames(temp_after_spacing_G1G3) = c("ProteinID", "G1G3_Spacing_after")
+
+temp_before_spacing_G1G3.m =  melt(temp_before_spacing_G1G3, id = c("ProteinID"))
+temp_after_spacing_G1G3.m =  melt(temp_after_spacing_G1G3, id = c("ProteinID"))
+
+G1G3 = rbind(temp_before_spacing_G1G3.m, temp_after_spacing_G1G3.m)
+
+mu <- ddply(G1G3, "variable", summarise, grp.mean=mean(value))
+
+p1_G1G3_Translational = ggplot(temp_before_spacing_G1G3.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#2e47a3")+
+  geom_density(alpha=.2, fill="#2e47a3")+
+  labs(title="G1 - G3 Spacing Before histogram plot",x="Spacing", y = "Density")
+
+p2_G1G3_Translational = ggplot(temp_after_spacing_G1G3.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#E69F00")+
+  geom_density(alpha=.2, fill="#E69F00")+
+  labs(title="G1 - G3 Spacing After histogram plot",x="Spacing", y = "Density")
+
+p3_G1G3_Translational= ggplot(G1G3, aes(x=value, color=variable, fill=variable))+  
+  geom_bar(aes(y = (..count..)/sum(..count..)), position="identity", alpha=0.5) + 
+  scale_y_continuous(labels = scales::percent, limits = c(0, 0.20),breaks=number_ticks(10))+
+  geom_vline(data=mu, aes(xintercept=grp.mean, color=variable),
+             linetype="dashed")+
+  scale_color_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  scale_fill_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  labs(title="G1 - G3 Spacing histogram plot",x="Spacing", y = "Percentage")+
+  theme(legend.position="bottom")
+
+suppressMessages( require(cowplot) )
+p_G1G3_Translational = plot_grid(p1_G1G3_Translational,p2_G1G3_Translational,p3_G1G3_Translational,ncol = 1)
+
+ggsave(outpath_G1G3_Translational, plot = p_G1G3_Translational, 
+       scale = 1,width=8.5, height=11, units = c("in", "cm", "mm"), dpi = 500)
+
+###########################################################################################
+
+temp_before_spacing_G3G4 = data.frame(temp_before[,1],temp_before[,4] - temp_before[,3]) 
+colnames(temp_before_spacing_G3G4) = c("ProteinID", "G3G4_Spacing_before")
+temp_after_spacing_G3G4 = data.frame(temp_after[,1],temp_after[,4] - temp_after[,3])
+colnames(temp_after_spacing_G3G4) = c("ProteinID", "G3G4_Spacing_after")
+
+temp_before_spacing_G3G4.m =  melt(temp_before_spacing_G3G4, id = c("ProteinID"))
+temp_after_spacing_G3G4.m =  melt(temp_after_spacing_G3G4, id = c("ProteinID"))
+
+G3G4 = rbind(temp_before_spacing_G3G4.m, temp_after_spacing_G3G4.m)
+
+mu <- ddply(G3G4, "variable", summarise, grp.mean=mean(value))
+
+p1_G3G4_Translational = ggplot(temp_before_spacing_G3G4.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#2e47a3")+
+  geom_density(alpha=.2, fill="#2e47a3")+
+  labs(title="G3 - G4 Spacing Before histogram plot",x="Spacing", y = "Density")
+
+p2_G3G4_Translational = ggplot(temp_after_spacing_G3G4.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#E69F00")+
+  geom_density(alpha=.2, fill="#E69F00")+
+  labs(title="G3 - G4 Spacing After histogram plot",x="Spacing", y = "Density")
+
+p3_G3G4_Translational = ggplot(G3G4, aes(x=value, color=variable, fill=variable)) +  
+  geom_bar(aes(y = (..count..)/sum(..count..)), position="identity", alpha=0.5) + 
+  scale_y_continuous(labels = scales::percent, limits = c(0, 0.20),breaks=number_ticks(10))+
+  geom_vline(data=mu, aes(xintercept=grp.mean, color=variable),
+             linetype="dashed")+
+  scale_color_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  scale_fill_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  labs(title="G3 - G4 Spacing histogram plot",x="Spacing", y = "Percentage")+
+  theme(legend.position="bottom")
+
+suppressMessages( require(cowplot) )
+p_G3G4_Translational = plot_grid(p1_G3G4_Translational,p2_G3G4_Translational,p3_G3G4_Translational,ncol = 1)
+
+ggsave(outpath_G3G4_Translational, plot = p_G3G4_Translational, 
+       scale = 1,width=8.5, height=11, units = c("in", "cm", "mm"), dpi = 500)
+
+#########################################################################################
+
+temp_before_spacing_G4G5 = data.frame(temp_before[,1],temp_before[,5] - temp_before[,4]) 
+colnames(temp_before_spacing_G4G5) = c("ProteinID", "G4G5_Spacing_before")
+temp_after_spacing_G4G5 = data.frame(temp_after[,1],temp_after[,5] - temp_after[,4])
+colnames(temp_after_spacing_G4G5) = c("ProteinID", "G4G5_Spacing_after")
+
+temp_before_spacing_G4G5.m =  melt(temp_before_spacing_G4G5, id = c("ProteinID"))
+temp_after_spacing_G4G5.m =  melt(temp_after_spacing_G4G5, id = c("ProteinID"))
+
+G4G5 = rbind(temp_before_spacing_G4G5.m, temp_after_spacing_G4G5.m)
+
+mu <- ddply(G4G5, "variable", summarise, grp.mean=mean(value))
+
+p1_G4G5_Translational = ggplot(temp_before_spacing_G4G5.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#2e47a3")+
+  geom_density(alpha=.2, fill="#2e47a3")+
+  labs(title="G4 - G5 Spacing Before histogram plot",x="Spacing", y = "Density")
+
+p2_G4G5_Translational = ggplot(temp_after_spacing_G4G5.m, aes(x=value)) + 
+  geom_histogram(aes(y=..density..), colour="black", fill="#E69F00")+
+  geom_density(alpha=.2, fill="#E69F00")+
+  labs(title="G4 - G5 Spacing After histogram plot",x="Spacing", y = "Density")
+
+p3_G4G5_Translational = ggplot(G4G5, aes(x=value, color=variable, fill=variable))+  
+  geom_bar(aes(y = (..count..)/sum(..count..)), position="identity", alpha=0.5) + 
+  scale_y_continuous(labels = scales::percent,breaks=number_ticks(10))+
+  geom_vline(data=mu, aes(xintercept=grp.mean, color=variable),
+             linetype="dashed")+
+  scale_color_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  scale_fill_manual(values=c("#2e47a3", "#E69F00", "#56B4E9"))+
+  labs(title="G4 - G5 Spacing histogram plot",x="Spacing", y = "Percentage")+
+  theme(legend.position="bottom")
+
+suppressMessages( require(cowplot) )
+p_G4G5_Translational = plot_grid(p1_G4G5_Translational,p2_G4G5_Translational,p3_G4G5_Translational,ncol = 1)
+
+ggsave(outpath_G4G5_Translational, plot = p_G4G5_Translational, 
+       scale = 1,width=8.5, height=11, units = c("in", "cm", "mm"), dpi = 500)
+
+#############################################################################################
+
+figure1 <- ggarrange(p3_G1G3_ras, p3_G3G4_ras,  p3_G4G5_ras ,
+                     ncol = 1, nrow = 3 , align = c("v"),  legend="bottom",common.legend = TRUE)
+
+figure1 <- annotate_figure(figure1, top = text_grob("A.Ras"),)
+
+figure2 <- ggarrange(p3_G1G3_Era, p3_G3G4_Era,  p3_G4G5_Era ,
+                     ncol = 1, nrow = 3 , align = c("v"),  legend="bottom",common.legend = TRUE)
+
+figure2 <- annotate_figure(figure2, top = text_grob("B.Era"),)
+
+figure3 <- ggarrange(p3_G1G3_Translational, p3_G3G4_Translational,  p3_G4G5_Translational ,
+                     ncol = 1, nrow = 3 , align = c("v"),  legend="bottom",common.legend = TRUE)
+
+figure3 <- annotate_figure(figure3, top = text_grob("C.Translational"),)
+
+figure <- ggarrange( figure1, figure2,figure3,ncol = 3  ,  legend="bottom")
+figure
+
+
+figure1 <- ggarrange(p3_G1G3_ras, p3_G3G4_ras,  p3_G4G5_ras ,
+                     ncol = 1, nrow = 3 , align = c("v"),  legend="bottom",common.legend = TRUE)
+
+
+fig <- ggarrange(p3_G1G3_ras, p3_G1G3_Era,p3_G1G3_Translational,
+                 p3_G3G4_ras, p3_G3G4_Era,p3_G3G4_Translational,
+                 p3_G4G5_ras ,p3_G4G5_Era,p3_G4G5_Translational,
+                  ncol = 3, nrow = 3 , align = c("hv"),  legend="bottom",common.legend = TRUE,
+                 labels = c("A.", "B.", "C."))
